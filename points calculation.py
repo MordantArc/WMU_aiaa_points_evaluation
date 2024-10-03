@@ -36,7 +36,7 @@ def points_mission3(team_laps,team_boxscore,team_weight,max_score): # team_XXX a
         mission3=2+(team_laps/max_score)
     return mission3
 
-def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=13.25,x1_weight=0.25,m3_laps=1,m3_boxscore=1,max_m3=1):
+def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5555,x1_weight=0.055,m3_laps=1,m3_boxscore=1,max_m3=1):
     points = 0
     if highest_mission_achieved>=1:
         points = 1
@@ -49,8 +49,6 @@ def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=13.
         raise ValueError('highest_mission_achieved value must be 0, 1, 2, or 3.')
     return points
 
-ans = all_mission_calc(5,2)
-
 """
 This is where we start analyzing the possibilities using iteration.
 
@@ -62,10 +60,10 @@ For 2 and 3, each maximum value can be determined(within reason) letting us grap
 
 For M2
 ---
-The denominator is just the highest value of (fuel/time). The maximum weight of an aircraft is 25 kilos. This means the theoretical maximum would be closer to 20 kilos for fuel as the aircraft will take around 5 kilos (minimum)
+The denominator is just the highest value of (fuel/time). The maximum weight of an aircraft is 55 lbs. This means the theoretical maximum would be closer to 45-50 lbs for fuel as the aircraft will take around 5-10 lbs (minimum)
 The longest time is about 5 minutes, but ideally we have the shortest time to complete 3 laps. We'll call it a minute thirty as a theoretical fastest model. We can work this back later as heavier aircraft may go slower.
 
-This means (with a very generous set of scores) that a max value can start around 13.25. Keep in mind that for the best team with this score, this only nets them the max 1 point (team_fuelweight/max_fuelweight). It just makes everyone elses score lower
+This means (with a very generous set of scores) that a max value can start around 0.555. Keep in mind that for the best team with this score, this only nets them the max 1 point (team_fuelweight/max_fuelweight). It just makes everyone elses score lower
 
 
 
@@ -76,7 +74,7 @@ Theis one is more complicated, but I'll skim the explanation and give my estimat
 best boxscore of 2.5
 best weight of 25g, 0.055 lbs
 
-this gives us a max score of (8+2.5/0.055) or _____. Again, this is not the actual score but the denominator. Max points on the flight portion is 3 (2 completion, 1 bonus points)
+this gives us a max score of (8+2.5/0.055) or 53.4545455. Again, this is not the actual score but the denominator. Max points on the flight portion is 3 (2 completion, 1 bonus points)
 
 
 
@@ -86,8 +84,8 @@ this gives us a max score of (8+2.5/0.055) or _____. Again, this is not the actu
 Given all this cope, the first function will just handle writing this data to a csv (or xlsx if I'm feeling out there) so I can log data in an iteration format.
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
-m2_max = 13.25
-m3_max = 110
+m2_max = 0.5555556
+m3_max = 53.4545455
 
 
 set_list = [["IV","DV","C","Other"]] # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]

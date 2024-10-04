@@ -63,7 +63,7 @@ For M2
 The denominator is just the highest value of (fuel/time). The maximum weight of an aircraft is 55 lbs. This means the theoretical maximum would be closer to 45-50 lbs for fuel as the aircraft will take around 5-10 lbs (minimum)
 The longest time is about 5 minutes, but ideally we have the shortest time to complete 3 laps. We'll call it a minute thirty as a theoretical fastest model. We can work this back later as heavier aircraft may go slower.
 
-This means (with a very generous set of scores) that a max value can start around 0.555. Keep in mind that for the best team with this score, this only nets them the max 1 point (team_fuelweight/max_fuelweight). It just makes everyone elses score lower
+This means (with a very generous set of scores) that a max value can start around 1.5. Keep in mind that for the best team with this score, this only nets them the max 1 point (team_fuelweight/max_fuelweight). It just makes everyone elses score lower
 
 
 
@@ -84,11 +84,16 @@ this gives us a max score of (8+2.5/0.055) or 53.4545455. Again, this is not the
 Given all this cope, the first function will just handle writing this data to a csv (or xlsx if I'm feeling out there) so I can log data in an iteration format.
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
-m2_max = 0.5555556
+m2_max = 1.5
 m3_max = 53.4545455
+
+reasonable_m2 = 0.25
+reasonable_m3 = 26
 
 
 set_list = [["IV","DV","C","Other"]] # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]
+
+filename = ''
 
 def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'): # writes matrix to a file
     with open(loc,writetype) as file:
@@ -97,6 +102,7 @@ def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'): # wr
             writer.writerow(row)
 
 def find_filename(): #ive written this function too many times but I can't be bothered to copy/paste, it just changes the number so we dont overwrite previous files
+    global filename
     files = os.listdir('./datafiles/')
     top = 0
     for file in files:
@@ -106,29 +112,36 @@ def find_filename(): #ive written this function too many times but I can't be bo
     filename = f'./datafiles/datafile_{top+1}.csv'
     return filename
 
-def mission_2():
+def mission_2(max_vals):
     set_list.append(['','','',''])
-    set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2_max is {m2_max}'])
+    set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2_max is {max_vals}'])
     for fuelweight in range(2,45,2):
         for time in range(60,300,5):
-            set_list.append([time,points_mission2(fuelweight,time/10,m2_max),fuelweight,''])
+            set_list.append([time,points_mission2(fuelweight,time/10,max_vals),fuelweight,''])
     set_list.append(['','','',''])
-    savetosheet(set_list,loc=find_filename())
+    if filename == '' :
+        find_filename()
+    savetosheet(set_list,loc=filename)
 
-def mission_3():
+def mission_3(max_vals):
+    global filename
     set_list.append(['','','',''])
-    set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3_max is {m3_max}'])
+    set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3_max is {max_vals}'])
     for i in range(1,3): #### IMPORTANT NOTE #### If we do not get any bonus points, we default to zero. 
         boxscore=i
         if i == 2:
             boxscore = 2.5
-        for x1weight in range(55,550,1):
+        for x1weight in range(55,500,1):
             for laps in range(1,10,1):                
-                set_list.append([x1weight/1000,points_mission3(laps,x1weight/1000,boxscore,m3_max),laps,''])
+                set_list.append([x1weight/1000,points_mission3(laps,x1weight/1000,boxscore,max_vals),laps,''])
     set_list.append(['','','',''])
-    savetosheet(set_list,loc=find_filename())
+    if filename == '' :
+        find_filename()
+    savetosheet(set_list,loc=filename)
 
 ### Test Cases ###
-mission_2()
-mission_3()
+mission_2(m2_max)
+mission_3(m3_max)
+mission_2(reasonable_m2)
+mission_3(reasonable_m3)
 print('done')

@@ -27,6 +27,8 @@ M3 = 2 + [N_(# laps flown + (bonus box score / X-1 test vehicle weight)) / Max_(
 def points_mission2(team_fuel, team_time, max_fueltime): # i know it doesnt have to be a function but it just makes me happier
     team_fueltime = team_fuel/team_time
     mission2 = 1 + (team_fueltime/max_fueltime)
+    if mission2 > 2:
+        return None
     return float(mission2)
 
 def points_mission3(team_laps,team_boxscore,team_weight,max_score): # team_XXX are self explanitory, max_score is max_(laps + fuel weight/time). This is not the max fuel divided by max time, this the best performing team in terms of (laps + fuel weight/time)
@@ -34,6 +36,8 @@ def points_mission3(team_laps,team_boxscore,team_weight,max_score): # team_XXX a
         mission3 = 2 + (team_laps+(team_boxscore/team_weight))/max_score
     except ZeroDivisionError:
         mission3=2+(team_laps/max_score)
+    if mission3 > 3:
+        return None
     return mission3
 
 def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5555,x1_weight=0.055,m3_laps=1,m3_boxscore=1,max_m3=1):
@@ -117,7 +121,9 @@ def mission_2(max_vals):
     set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2_max is {max_vals}'])
     for fuelweight in range(2,45,2):
         for time in range(60,300,5):
-            set_list.append([time,points_mission2(fuelweight,time/10,max_vals),fuelweight,''])
+            missionval = points_mission2(fuelweight,time/10,max_vals)
+            if missionval != None:
+                set_list.append([time,missionval,fuelweight,''])
     set_list.append(['','','',''])
     if filename == '' :
         find_filename()
@@ -132,8 +138,10 @@ def mission_3(max_vals):
         if i == 2:
             boxscore = 2.5
         for x1weight in range(55,500,1):
-            for laps in range(1,10,1):                
-                set_list.append([x1weight/1000,points_mission3(laps,x1weight/1000,boxscore,max_vals),laps,''])
+            for laps in range(1,10,1):        
+                missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)
+                if missionval3 != None:        
+                    set_list.append([x1weight/1000,missionval3,laps,''])
     set_list.append(['','','',''])
     if filename == '' :
         find_filename()

@@ -1,0 +1,10 @@
+{
+    "Maxes":{
+        "m2_max" : 1.5
+        ,"m3_max" : 53.4545455
+
+        ,"reasonable_m2" : 0.25
+        ,"reasonable_m3" : 26
+
+    }
+}

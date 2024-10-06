@@ -1,4 +1,4 @@
-import csv, os
+import csv, os, json
 
 """"
 
@@ -28,7 +28,7 @@ def points_mission2(team_fuel, team_time, max_fueltime): # i know it doesnt have
     team_fueltime = team_fuel/team_time
     mission2 = 1 + (team_fueltime/max_fueltime)
     if mission2 > 2:
-        return None
+        return 2
     return float(mission2)
 
 def points_mission3(team_laps,team_boxscore,team_weight,max_score): # team_XXX are self explanitory, max_score is max_(laps + fuel weight/time). This is not the max fuel divided by max time, this the best performing team in terms of (laps + fuel weight/time)
@@ -37,7 +37,7 @@ def points_mission3(team_laps,team_boxscore,team_weight,max_score): # team_XXX a
     except ZeroDivisionError:
         mission3=2+(team_laps/max_score)
     if mission3 > 3:
-        return None
+        return 3
     return mission3
 
 def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5555,x1_weight=0.055,m3_laps=1,m3_boxscore=1,max_m3=1):
@@ -88,12 +88,13 @@ this gives us a max score of (8+2.5/0.055) or 53.4545455. Again, this is not the
 Given all this cope, the first function will just handle writing this data to a csv (or xlsx if I'm feeling out there) so I can log data in an iteration format.
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
+"""
 m2_max = 1.5
 m3_max = 53.4545455
 
 reasonable_m2 = 0.25
 reasonable_m3 = 26
-
+"""
 
 set_list = [["IV","DV","C","Other"]] # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]
 
@@ -148,8 +149,12 @@ def mission_3(max_vals):
     savetosheet(set_list,loc=filename)
 
 ### Test Cases ###
-mission_2(m2_max)
-mission_3(m3_max)
-mission_2(reasonable_m2)
-mission_3(reasonable_m3)
+
+with open('./settings.json','r') as jsonf:
+    settings = json.load(jsonf)
+
+mission_2(settings['Maxes']['m2_max'])
+mission_3(settings['Maxes']['m3_max'])
+mission_2(settings['Maxes']['reasonable_m2'])
+mission_3(settings['Maxes']['reasonable_m3'])
 print('done')

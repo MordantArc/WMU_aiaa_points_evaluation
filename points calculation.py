@@ -88,13 +88,6 @@ this gives us a max score of (8+2.5/0.055) or 53.4545455. Again, this is not the
 Given all this cope, the first function will just handle writing this data to a csv (or xlsx if I'm feeling out there) so I can log data in an iteration format.
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
-"""
-m2_max = 1.5
-m3_max = 53.4545455
-
-reasonable_m2 = 0.25
-reasonable_m3 = 26
-"""
 
 set_list = [["IV","DV","C","Other"]] # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]
 

@@ -17,12 +17,14 @@ For 2 and 3, each maximum value can be determined(within reason) letting us grap
 
 
 _**For M2:**_
+
 The denominator is just the highest value of (fuel/time). The maximum weight of an aircraft is 55 lbs. This means the theoretical maximum would be closer to 45-50 lbs for fuel as the aircraft will take around 5-10 lbs (minimum)
 The longest time is about 5 minutes, but ideally we have the shortest time to complete 3 laps. We'll call it a minute thirty as a theoretical fastest model. We can work this back later as heavier aircraft may go slower.
 
 This means (with a very generous set of scores) that a max value can start around 1.5. Keep in mind that for the best team with this score, this only nets them the max 1 point (team_fuelweight/max_fuelweight). It just makes everyone elses score lower
 
 _**For M3:**_
+
 This one is more complicated, but I'll skim the explanation and give my estimates.
 8 laps max 
 best boxscore of 2.5

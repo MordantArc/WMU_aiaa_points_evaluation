@@ -30,3 +30,13 @@ This one is more complicated, but I'll skim the explanation and give my estimate
 
 This gives us a "max" score of (8+2.5/0.055) or 53.4545455. Again, this is not the actual score but the denominator. Max points on the flight portion is 3 (2 completion, 1 bonus points)
 
+# "**Reasonable**" Values
+Our worst case scenario was those "max" values. These """reasonable""" values are just shy of the absurdity of the maxes but still a next-to-impossible score to get. 
+
+To put it into context, a 55lb airplane with only a 6ft wingspan x 2ft chord nets a 4.58lb/sqft wing loading, where a 2.25lb/sqft wing loading is considered a heavy loading. Not to mention a max of 100a thrust. That is a very difficult aircraft to make and compete, much less doing that with a lap time of a minute thirty. Point being, the maxes are as close to impossible (if not straight up impossible entirely).
+
+To get a better idea of our chances, these """reasonable""" values are trying to come up with a much more likely scenario for a potential best aircraft.
+
+I'll skip my explanations and give my estimations:
+ - M2 = 0.25
+ - M3 = 26

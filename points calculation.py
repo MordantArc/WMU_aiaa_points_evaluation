@@ -4,7 +4,8 @@ import csv, os, json
 
 RCAT Points Calculation
 
-(wip)
+V 0 . 3 . 4
+on github
 
 ALL CALCULATIONS ARE IN LBS AND sec
 
@@ -18,7 +19,6 @@ mission one is just completion for 1 point
 
 with open('./settings.json','r') as jsonf:
     settings = json.load(jsonf)
-
 
 def points_mission2(team_fuel, team_time, max_fueltime): # i know it doesnt have to be a function but it just makes me happier
     team_fueltime = team_fuel/team_time
@@ -60,12 +60,6 @@ set_list = [["IV","DV","C","Other"]] # This list will hold other lists. Think of
 
 filename = ''
 
-def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'): # writes matrix to a file
-    with open(loc,writetype) as file:
-        writer = csv.writer(file)
-        for row in data:
-            writer.writerow(row)
-
 def find_filename(): #ive written this function too many times but I can't be bothered to copy/paste, it just changes the number so we dont overwrite previous files
     global filename
     files = os.listdir('./datafiles/')
@@ -77,6 +71,15 @@ def find_filename(): #ive written this function too many times but I can't be bo
     filename = f'./datafiles/datafile_{top+1}.csv'
     return filename
 
+filename = find_filename()
+
+def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'): # writes matrix to a file
+    global filename
+    with open(loc,writetype) as file:
+        writer = csv.writer(file)
+        for row in data:
+            writer.writerow(row)
+
 def mission_2(max_vals):
     set_list.append(['','','',''])
     set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2_max is {max_vals}'])
@@ -86,12 +89,9 @@ def mission_2(max_vals):
             if missionval != None:
                 set_list.append([time,missionval,fuelweight,''])
     set_list.append(['','','',''])
-    if filename == '' :
-        find_filename()
     savetosheet(set_list,loc=filename)
 
 def mission_3(max_vals):
-    global filename
     set_list.append(['','','',''])
     set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3_max is {max_vals}'])
     for i in range(1,3): #### IMPORTANT NOTE #### If we do not get any bonus points, we default to zero. 
@@ -104,8 +104,6 @@ def mission_3(max_vals):
                 if missionval3 != None:        
                     set_list.append([x1weight/1000,missionval3,laps,''])
     set_list.append(['','','',''])
-    if filename == '' :
-        find_filename()
     savetosheet(set_list,loc=filename)
 
 ### Test Cases ###

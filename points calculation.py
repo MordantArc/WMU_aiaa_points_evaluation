@@ -16,6 +16,10 @@ ALL CALCULATIONS ARE IN LBS AND sec
 mission one is just completion for 1 point
 """
 
+with open('./settings.json','r') as jsonf:
+    settings = json.load(jsonf)
+
+
 def points_mission2(team_fuel, team_time, max_fueltime): # i know it doesnt have to be a function but it just makes me happier
     team_fueltime = team_fuel/team_time
     mission2 = 1 + (team_fueltime/max_fueltime)
@@ -105,10 +109,6 @@ def mission_3(max_vals):
     savetosheet(set_list,loc=filename)
 
 ### Test Cases ###
-
-with open('./settings.json','r') as jsonf:
-    settings = json.load(jsonf)
-
 mission_2(settings['Maxes']['m2_max'])
 mission_3(settings['Maxes']['m3_max'])
 mission_2(settings['Maxes']['reasonable_m2'])

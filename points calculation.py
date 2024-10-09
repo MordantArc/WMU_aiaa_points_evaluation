@@ -106,15 +106,15 @@ def mission_3(max_vals,name=""):
     x1settings = settings["ranges"]["M3"]["x1weight"]
     lapsettings = settings["ranges"]["M3"]["laps"]
 
-    for i in range(1,3):                                                                                        #### IMPORTANT NOTE #### If we do not get any bonus points, we default to zero. 
-        boxscore=i                                                                                              # 
-        if i == 2:                                                                                              # edit from well after I put this note in:
-            boxscore = 2.5                                                                                      # I genuinely don't know what I meant by this, our score in that case would be (team laps / max score)
-        for x1weight in range(x1settings[0],x1settings[1],x1settings[2]):                                       # This would be a relatively small number but it still isn't 0
-            for laps in range(lapsettings[0],lapsettings[1],lapsettings[2]):                                    # What's more confusing is that points_m3() accounts for 0 bonus points (?)
-                missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)                             # We can absolutely have no bonus points
+    for i in range(0,3):
+        boxscore=i
+        if i == 2:
+            boxscore = 2.5
+        for x1weight in range(x1settings[0],x1settings[1],x1settings[2]):
+            for laps in range(lapsettings[0],lapsettings[1],lapsettings[2]):
+                missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)
                 if missionval3 != None:        
-                    set_list.append([x1weight/1000,missionval3,laps,''])
+                    set_list.append([x1weight/1000,missionval3,laps,f'BOXSCORE : ({boxscore})'])
     set_list.append(['','','',''])
     savetosheet(set_list,loc=filename)
 

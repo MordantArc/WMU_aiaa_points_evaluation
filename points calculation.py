@@ -16,23 +16,23 @@ ALL CALCULATIONS ARE IN LBS AND sec
 mission one is just completion for 1 point
 """
 
-with open('./settings.json','r') as jsonf:
+with open('./settings.json','r') as jsonf:                                                                      # Loads the settings.JSON as a python dict
     settings = json.load(jsonf)
 
 def points_mission2(team_fuel, team_time, max_fueltime):                                                        # i know it doesnt have to be a function but it just makes me happier
     team_fueltime = team_fuel/team_time
     mission2 = 1 + (team_fueltime/max_fueltime)
-    if mission2 > 2:
-        return 2
+    if mission2 > 2:                                                                                            # A value that is higher than 2 means that our (fuelweight/time) was higher than the max (which is impossible) 
+        return 2                                                                                                # This means our score gets used as a max, meaning we divide our score by our score - or just 1 point + the 1 completion point for 2 total.
     return float(mission2)
 
-def points_mission3(team_laps,team_boxscore,team_weight,max_score):                                             # team_XXX are self explanitory, max_score is max_(laps + fuel weight/time). 
+def points_mission3(team_laps,team_boxscore,team_weight,max_score):                                             # team_XXX are self explanitory, max_score is max_(laps + x1weight/time). 
     try:                                                                                                        #This is not the max fuel divided by max time, this the best performing team in terms of (laps + fuel weight/time)
         mission3 = 2 + (team_laps+(team_boxscore/team_weight))/max_score
     except ZeroDivisionError:
         mission3=2+(team_laps/max_score)
-    if mission3 > 3:
-        return 3
+    if mission3 > 3:                                                                                            # same max rule as M2, it is impossible to get a score better than 3 for M3
+        return 3                                                                                                
     return mission3
 
 def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5555,x1_weight=0.055,m3_laps=1,m3_boxscore=1,max_m3=1):
@@ -40,18 +40,17 @@ def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5
     if highest_mission_achieved>=1:                                                                             # in post (IE: in Excel or something). I'll leave it for the moment but I'll consider it non-functional
         points = 1
         if highest_mission_achieved>=2:
-            points+=points_mission2(fuel_weight,m2_time,max_m2)                                                 # REPLACE LATER
+            points+=points_mission2(fuel_weight,m2_time,max_m2)
             if highest_mission_achieved==3:
-                points+=points_mission3(m3_laps,m3_boxscore,x1_weight,max_m3)                                   # REPLACE
+                points+=points_mission3(m3_laps,m3_boxscore,x1_weight,max_m3)
 
     elif ((highest_mission_achieved>3) or (highest_mission_achieved<0) or (type(highest_mission_achieved)!=int)):
         raise ValueError('highest_mission_achieved value must be 0, 1, 2, or 3.')
     return points
 
 """
-This is where we start analyzing the possibilities using iteration.
+Right now this is all assuming CSV, and I think I'll keep it as is for now. XLSX is easier to use in Excel but CSVs work good enough.
 
-Given all this cope, the first function will just handle writing this data to a csv (or xlsx if I'm feeling out there) so I can log data in an iteration format.
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
 
@@ -65,7 +64,7 @@ def find_filename():                                                            
         files = os.listdir('./datafiles/')                                                                      # What I haven't tested is if there isn't any datafile in the folder. 
     except FileNotFoundError:                                                                                   # I know that it will create a folder if there isn't one, but I don't know how it
         os.mkdir('./datafiles/')                                                                                # will handle no datafile. I'm curious if it throws an error or if it just starts
-        find_filename()                                                                                         # with 1. The Github already has files in the folder so I'm not too worried
+        find_filename()                                                                                         # with 1. The Github repo already has files in the folder so I'm not too worried
     top = 0 
     for file in files:
         num = int(file.lstrip('datafile_').rstrip('.csv'))
@@ -94,10 +93,10 @@ def mission_2(max_vals,name=""):
         for time in range(timesettings[0],timesettings[1],timesettings[2]):
 
             missionval = points_mission2(fuelweight,time/10,max_vals)
-            if missionval != None:
-                set_list.append([time,missionval,fuelweight,''])
+            if missionval != None:                                                                              # This is old, I used to have it completely exclude mission values larger than what is possible
+                set_list.append([time,missionval,fuelweight,''])                                                # Now it just adjusts it to the maximum and still includes it (IDK how I feel about keeping it)
 
-    set_list.append(['','','',''])
+    set_list.append(['','','',''])                                                                              # Spacer
     savetosheet(set_list,loc=filename)
 
 def mission_3(max_vals,name=""):
@@ -108,12 +107,12 @@ def mission_3(max_vals,name=""):
     lapsettings = settings["ranges"]["M3"]["laps"]
 
     for i in range(1,3):                                                                                        #### IMPORTANT NOTE #### If we do not get any bonus points, we default to zero. 
-        boxscore=i
-        if i == 2:
-            boxscore = 2.5
-        for x1weight in range(x1settings[0],x1settings[1],x1settings[2]):
-            for laps in range(lapsettings[0],lapsettings[1],lapsettings[2]):        
-                missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)
+        boxscore=i                                                                                              # 
+        if i == 2:                                                                                              # edit from well after I put this note in:
+            boxscore = 2.5                                                                                      # I genuinely don't know what I meant by this, our score in that case would be (team laps / max score)
+        for x1weight in range(x1settings[0],x1settings[1],x1settings[2]):                                       # This would be a relatively small number but it still isn't 0
+            for laps in range(lapsettings[0],lapsettings[1],lapsettings[2]):                                    # What's more confusing is that points_m3() accounts for 0 bonus points (?)
+                missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)                             # We can absolutely have no bonus points
                 if missionval3 != None:        
                     set_list.append([x1weight/1000,missionval3,laps,''])
     set_list.append(['','','',''])

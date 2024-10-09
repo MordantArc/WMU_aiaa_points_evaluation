@@ -2,10 +2,9 @@ import csv, os, json
 
 """"
 
-RCAT Points Calculation
+Western Michigan University AIAA RCAT Points Calculation for 2024-2025 Competition
 
-V 0 . 3 . 5
-vx.x.x-1 on github
+V 0 . 5 . 0
 
 ALL CALCULATIONS ARE IN LBS AND sec
 
@@ -37,8 +36,8 @@ def points_mission3(team_laps,team_boxscore,team_weight,max_score):             
     return mission3
 
 def all_mission_calc(fuel_weight,highest_mission_achieved,m2_time=2.5,max_m2=0.5555,x1_weight=0.055,m3_laps=1,m3_boxscore=1,max_m3=1):
-    points = 0
-    if highest_mission_achieved>=1:
+    points = 0                                                                                                  # I havent used this function at all, I don't really know if it would be useful or if it's better to just combine it all
+    if highest_mission_achieved>=1:                                                                             # in post (IE: in Excel or something). I'll leave it for the moment but I'll consider it non-functional
         points = 1
         if highest_mission_achieved>=2:
             points+=points_mission2(fuel_weight,m2_time,max_m2)                                                 # REPLACE LATER
@@ -60,14 +59,14 @@ set_list = [["IV","DV","C","Other"]]                                            
 
 filename = ''
 
-def find_filename():                                                                                            #ive written this function too many times but I can't be bothered to copy/paste, 
-    global filename                                                                                             # it just changes the number so we dont overwrite previous files
-    try:
-        files = os.listdir('./datafiles/')
-    except FileNotFoundError:
-        os.mkdir('./datafiles/')
-        find_filename()
-    top = 0
+def find_filename():                                                                                            # ive written this function too many times but I can't be bothered to copy/paste, 
+    global filename                                                                                             # it just changes the number of datafile so we dont overwrite previous files
+    try:                                                                                                        #
+        files = os.listdir('./datafiles/')                                                                      # What I haven't tested is if there isn't any datafile in the folder. 
+    except FileNotFoundError:                                                                                   # I know that it will create a folder if there isn't one, but I don't know how it
+        os.mkdir('./datafiles/')                                                                                # will handle no datafile. I'm curious if it throws an error or if it just starts
+        find_filename()                                                                                         # with 1. The Github already has files in the folder so I'm not too worried
+    top = 0 
     for file in files:
         num = int(file.lstrip('datafile_').rstrip('.csv'))
         if num>top:
@@ -77,16 +76,16 @@ def find_filename():                                                            
 
 filename = find_filename()
 
-def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'):                                     # writes matrix to a file
+def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'):                                     # writes matrix to a CSV file
     global filename
     with open(loc,writetype) as file:
         writer = csv.writer(file)
         for row in data:
             writer.writerow(row)
 
-def mission_2(max_vals):
+def mission_2(max_vals,name=""):
     set_list.append(['','','',''])
-    set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2 max is set to {max_vals}'])
+    set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2 max value is set to {max_vals} ({name})'])
 
     fwsettings = settings["ranges"]["M2"]["fuelweight"]
     timesettings = settings["ranges"]["M2"]["time"]
@@ -101,9 +100,9 @@ def mission_2(max_vals):
     set_list.append(['','','',''])
     savetosheet(set_list,loc=filename)
 
-def mission_3(max_vals):
+def mission_3(max_vals,name=""):
     set_list.append(['','','',''])
-    set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3 max is set to {max_vals}'])
+    set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3 max value is set to {max_vals} ({name})'])
 
     x1settings = settings["ranges"]["M3"]["x1weight"]
     lapsettings = settings["ranges"]["M3"]["laps"]
@@ -120,12 +119,14 @@ def mission_3(max_vals):
     set_list.append(['','','',''])
     savetosheet(set_list,loc=filename)
 
-
-
+def main():
+    for max_name, max_values in settings['maxes'].items():
+        if ('m2' in max_name):
+            mission_2(max_values,name=max_name)
+        elif ('m3' in max_name):
+            mission_3(max_values,name=max_name)
 
 ### Test Cases ###
-mission_2(settings['maxes']['m2_max'])
-mission_3(settings['maxes']['m3_max'])
-mission_2(settings['maxes']['reasonable_m2'])
-mission_3(settings['maxes']['reasonable_m3'])
-print('done')
+if __name__=="__main__":                                                                                        # I know we don't really need this but it makes me happy to have it so ¯\_(ツ)_/¯
+    main()
+    print('done')

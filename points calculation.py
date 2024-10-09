@@ -8,12 +8,9 @@ V 0 . 5 . 0
 
 ALL CALCULATIONS ARE IN LBS AND sec
 
-"""
-
-"""
 3 missions, ground ops, and report scores
 
-mission one is just completion for 1 point
+mission one is just a completion score so it is not included as a function.
 """
 
 with open('./settings.json','r') as jsonf:                                                                      # Loads the settings.JSON as a python dict
@@ -27,7 +24,7 @@ def points_mission2(team_fuel, team_time, max_fueltime):                        
     return float(mission2)
 
 def points_mission3(team_laps,team_boxscore,team_weight,max_score):                                             # team_XXX are self explanitory, max_score is max_(laps + x1weight/time). 
-    try:                                                                                                        #This is not the max fuel divided by max time, this the best performing team in terms of (laps + fuel weight/time)
+    try:                                                                                                        # This is not the max fuel divided by max time, this the best performing team in terms of (laps + fuel weight/time)
         mission3 = 2 + (team_laps+(team_boxscore/team_weight))/max_score
     except ZeroDivisionError:
         mission3=2+(team_laps/max_score)
@@ -54,7 +51,7 @@ Right now this is all assuming CSV, and I think I'll keep it as is for now. XLSX
 We are also assuming we complete all 3 missions (we arent going to win if we dont)
 """
 
-set_list = [["IV","DV","C","Other"]]                                                                            # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]
+set_list = [["IV","C","DV","Other"]]                                                                            # This list will hold other lists. Think of a matrix. First index is row, second is column. ie set_list[row][column]
 
 filename = ''
 
@@ -64,7 +61,7 @@ def find_filename():                                                            
         files = os.listdir('./datafiles/')                                                                      # What I haven't tested is if there isn't any datafile in the folder. 
     except FileNotFoundError:                                                                                   # I know that it will create a folder if there isn't one, but I don't know how it
         os.mkdir('./datafiles/')                                                                                # will handle no datafile. I'm curious if it throws an error or if it just starts
-        find_filename()                                                                                         # with 1. The Github repo already has files in the folder so I'm not too worried
+        filename = './datafiles/datafile_1.csv'                                                                 # with 1. I'm avoiding this by manually setting the filename to datafile_1.csv
     top = 0 
     for file in files:
         num = int(file.lstrip('datafile_').rstrip('.csv'))
@@ -83,8 +80,8 @@ def savetosheet(data,loc = './datafiles/overwrite_test.csv',writetype='w'):     
             writer.writerow(row)
 
 def mission_2(max_vals,name=""):
-    set_list.append(['','','',''])
-    set_list.append(['TIME (SEC)','POINTS','FUEL WEIGHT (LBS)',f'M2 max value is set to {max_vals} ({name})'])
+    set_list.append(['','','',''])                                                                              # Spacer
+    set_list.append(['TIME (SEC)','FUEL WEIGHT (LBS)','POINTS',f'M2 max value is set to {max_vals} ({name})'])
 
     fwsettings = settings["ranges"]["M2"]["fuelweight"]
     timesettings = settings["ranges"]["M2"]["time"]
@@ -94,14 +91,14 @@ def mission_2(max_vals,name=""):
 
             missionval = points_mission2(fuelweight,time/10,max_vals)
             if missionval != None:                                                                              # This is old, I used to have it completely exclude mission values larger than what is possible
-                set_list.append([time,missionval,fuelweight,''])                                                # Now it just adjusts it to the maximum and still includes it (IDK how I feel about keeping it)
+                set_list.append([time,fuelweight,missionval,''])                                                # Now it just adjusts it to the maximum and still includes it (IDK how I feel about keeping it)
 
-    set_list.append(['','','',''])                                                                              # Spacer
+    set_list.append(['','','',''])
     savetosheet(set_list,loc=filename)
 
 def mission_3(max_vals,name=""):
     set_list.append(['','','',''])
-    set_list.append(['WEIGHT (LBS)','POINTS','LAPS',f'M3 max value is set to {max_vals} ({name})'])
+    set_list.append(['WEIGHT (LBS)','LAPS','POINTS',f'M3 max value is set to {max_vals} ({name})'])
 
     x1settings = settings["ranges"]["M3"]["x1weight"]
     lapsettings = settings["ranges"]["M3"]["laps"]
@@ -114,7 +111,7 @@ def mission_3(max_vals,name=""):
             for laps in range(lapsettings[0],lapsettings[1],lapsettings[2]):
                 missionval3 = points_mission3(laps,x1weight/1000,boxscore,max_vals)
                 if missionval3 != None:        
-                    set_list.append([x1weight/1000,missionval3,laps,f'BOXSCORE : ({boxscore})'])
+                    set_list.append([x1weight/1000,laps,missionval3,f'BOXSCORE : ({boxscore})'])
     set_list.append(['','','',''])
     savetosheet(set_list,loc=filename)
 
@@ -124,6 +121,8 @@ def main():
             mission_2(max_values,name=max_name)
         elif ('m3' in max_name):
             mission_3(max_values,name=max_name)
+        else:
+            raise IndexError("Value found in 'Maxes' does not contain m2 or m3.")
 
 ### Test Cases ###
 if __name__=="__main__":                                                                                        # I know we don't really need this but it makes me happy to have it so ¯\_(ツ)_/¯

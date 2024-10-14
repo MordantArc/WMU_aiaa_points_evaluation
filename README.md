@@ -18,9 +18,9 @@ For M2 and M3, each maximum value can be determined(within reason) letting us gr
 
 _**For M2:**_
 The denominator ```max``` is just the highest value of ```(fuel/time)``` by any competition team. The maximum weight of an aircraft is 55 lbs. This means the theoretical maximum would be closer to 45-50 lbs for fuel as the aircraft will take around 5-10 lbs (minimum)
-The longest time in the air is about 5 minutes to complete 3 laps, but the shortest time is what we are all aiming for. We'll call it a minute thirty as a theoretical fastest model. We can work this back later as heavier aircraft may go slower.
+The longest time in the air is about 5 minutes to complete 3 laps, but the shortest time is what we are all aiming for. We'll call it a minute thirty (90 seconds) as a theoretical fastest model. We can work this back later as heavier aircraft may go slower.
 
-This means (with a very generous set of scores) that a max value can start around 1.5. This means that the ```max``` value for M2 is 1.5, and our team's ```(fuel/time)``` will be divided by 1.5 to get a value between 1-2 points for M2. Keep in mind that for the best team with this score, this only nets them a maximum of 1 point ```(team_fuelweight/max_fuelweight)``` on top of the 1 point for completion. The ```max``` value being higher just makes everyone elses score lower.
+This means (with a very generous set of scores) that a max value can start around 0.555556. This means that the ```max``` value for M2 is 0.555556, and our team's ```(fuel/time)``` will be divided by 0.555556 to get a value between 1-2 points for M2. Keep in mind that for the best team with this score, this only nets them a maximum of 1 point ```(team_fuelweight/max_fuelweight)``` on top of the 1 point for completion. The ```max``` value being higher just makes everyone elses score lower.
 
 _**For M3:**_
 This one is more complicated, but I'll skim the explanation and give my estimates as it is the same general idea as M2.
@@ -28,7 +28,7 @@ This one is more complicated, but I'll skim the explanation and give my estimate
  - best boxscore of 2.5
  - best weight of 25g, 0.055 lbs
 
-This gives us a ```max``` score of (8+2.5/0.055) or 53.4545455. Again, this is not the actual score but the denominator. Max points on the flight portion is 3 (2 completion, 1 bonus points)
+This gives us a ```max``` score of (8+2.5/0.055) or 53.4545455. Again, this is not the actual score but the denominator. Max points on the flight portion is 3 (2 completion, 1 calculated point)
 
 # "**Reasonable**" Values
 Our worst case scenario was those ```max``` values. These ```"""reasonable"""``` values are just shy of the absurdity of the maxes but still a next-to-impossible score to get. 

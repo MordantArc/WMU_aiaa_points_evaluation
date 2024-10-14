@@ -1,6 +1,6 @@
 {
     "maxes":{
-        "m2_max" : 1.5
+        "m2_max" : 0.555556
         ,"m3_max" : 53.4545455
 
         ,"reasonable_m2" : 0.25
@@ -9,7 +9,7 @@
     },
     "ranges":{
         "M2":{
-            "fuelweight":[2,45,2],
+            "fuelweight":[1,45,2],
             "time":[60,300,5]
         },
         "M3":{

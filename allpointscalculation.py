@@ -4,7 +4,7 @@ import csv, os, json
 
 Western Michigan University AIAA RCAT Points Calculation for 2024-2025 Competition
 
-V 0 . 5 . 1
+V 0 . 5 . 3
 
 ALL CALCULATIONS ARE IN LBS AND sec
 
@@ -116,12 +116,12 @@ def mission_3(max_vals,name=""):
     savetosheet(set_list,loc=filename)
 
 def query_all_missions():  
-    print('This function is not in use.')                                                                       # This is just a function that uses the terminal to query a point score using a specific set of values.
-    pass                                                                                                        # In english, this means we can enter things like fuel weight for our prototypes and get 
-    while True:                                                                                                 # an expected score back. This makes it so that we don't have to fish for a score in the CSV
-        resp = int(input('What is the highest mission attained? \n Must Be 1, 2, or 3.\nMission: '))            #
-        if (resp>=1) and (resp<=3) and (type(resp)==int):                                                       # Personally I think this is all more trouble than it is worth, but I'm doing it anyway
-            break                                                                                               # 
+    print('This function is not in use.')
+    pass
+    while True:                                                                                                 # This is just a function that uses the terminal to query a point score using a specific set of values.
+        resp = int(input('What is the highest mission attained? \n Must Be 1, 2, or 3.\nMission: '))            # In english, this means we can enter things like fuel weight for our prototypes and get 
+        if (resp>=1) and (resp<=3) and (type(resp)==int):                                                       # an expected score back. This makes it so that we don't have to fish for a score in the CSV
+            break                                                                                               # Personally I think this is all more trouble than it is worth, but I'm doing it anyway
         else:
             print('Value must be 1, 2, or 3. Type the number, do not write out "Three"\n\n')
     
@@ -134,7 +134,7 @@ def query_all_missions():
     if resp == 1:
         print('Mission 1 is only for a single completion point. If we only finished M1, we have 1 point.')
     else:
-        points = 0
+        points = 1                                                                                              # Again, if we reach M2 we assume we passed M1. M1 is a completion point. Therefore we start with a point.
         while True:
             m2_fw = int(input("What is the Fuel Weight (in Lbs) for Mission 2?\nFuel Weight: "))
             if (m2_fw >=fwsettings[0]) and (m2_fw<=fwsettings[1]):
@@ -152,8 +152,30 @@ def query_all_missions():
         m2_max_value = settings['maxes']['m2_max']                                                              # This needs to be changed to an input to ask what max value they want (the actual maxes vs reasonable maxes)
 
         points += points_mission2(m2_fw,m2_time,m2_max_value)                                                   # 
-        if resp == 3:                                                                                           # The else here means completion of mission 3.
-            pass
+        if resp == 3:                                                                                           # This here means completion of mission 3.
+            while True:
+                m3_laps = int(input("How many laps were completed in M3?\nLaps: "))
+                if (m3_laps >=lapsettings[0]) and (m3_laps<=lapsettings[1]):
+                    break
+                else:
+                    print(f'\n-- Laps must be between {lapsettings[0]} laps and {lapsettings[1]} laps. --\n')
+            
+            while True:
+                m3_tw = (input("What was the weight of the X1 (in lbs) Mission 3?\nPounds: "))*1000             # entered in 0.055, times 1000, equals 55. Limits are in thousandths of a pound
+                if (m3_tw>=x1settings[0]) and (m3_tw<=x1settings[1]):
+                    break
+                else:
+                    print(f'\n-- Weight must be between {x1settings[0]/1000} sec and {x1settings[1]/1000} sec. --\n')
+            
+            m3_max_value = settings['maxes']['m3_max']                                                              # This needs to be changed to an input to ask what max value they want (the actual maxes vs reasonable maxes)
+
+            boxscore0 = points + points_mission3(m3_laps,0,m3_tw,m3_max_value)
+            boxscore1 = points + points_mission3(m3_laps,1,m3_tw,m3_max_value)
+            boxscore2 = points + points_mission3(m3_laps,2.5,m3_tw,m3_max_value)
+    if (resp==1) or (resp==2):
+        print(f'###---### RESULTS ###---###\n\nYour points have been calculated to be:\n {round(boxscore0,3)} Points\n\n###---###         ###---###')
+    elif resp==3:
+        print(f'###---### RESULTS ###---###\n\nYour points have been calculated to be:\n {round(boxscore0,3)} Points if a boxscore of 0.\n {round(boxscore1,3)} Points if a boxscore of 1.\n {round(boxscore2,3)} Points if a boxscore of 2.5.\n\n###---###         ###---###') # Looks like garbage but it works ig
 
 
 def main():
@@ -163,7 +185,7 @@ def main():
         elif ('m3' in max_name):
             mission_3(max_values,name=max_name)
         else:
-            raise IndexError("Value found in 'Maxes' does not contain 'm2' or 'm3'.")
+            raise IndexError("\nValue found in 'Maxes' does not contain 'm2' or 'm3'.\n Please check the settings.json file.")
 
 ### Test Cases ###
 if __name__=="__main__":                                                                                        # I know we don't really need this but it makes me happy to have it so ¯\_(ツ)_/¯

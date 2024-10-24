@@ -4,7 +4,7 @@ import csv, os, json
 
 Western Michigan University AIAA RCAT Points Calculation for 2024-2025 Competition
 
-V 0 . 5 . 3
+V 1 . 0 . 0
 
 ALL CALCULATIONS ARE IN LBS AND sec unless otherwise noted
 
